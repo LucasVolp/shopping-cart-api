@@ -12,20 +12,88 @@ Carrinho de compras.
 
 ## Backend
 
-O backend do projeto será desenvolvido em Python, utilizando FastAPI.
+O backend do projeto será desenvolvido em Python, utilizando FastAPI com SQLAlchemy, Alembic e banco de dados PostgreSQL (NeonDB).
 
-## Instruções para execução
+---
 
-O projeto ainda está em desenvolvimento, mas a execução prevista será via Docker.
+## Pré-requisitos
 
-1. Instale o Docker e o Docker Compose na sua máquina.
-2. Clone o repositório para o seu ambiente local.
-3. Acesse a pasta do projeto.
-4. Configure as variáveis de ambiente, caso existam arquivos como `.env.example`.
-5. Quando a configuração Docker estiver disponível, execute a aplicação com:
+- Python 3.11+
+- pip
+
+---
+
+## Configuração do ambiente
+
+1. Clone o repositório:
+
+```bash
+git clone <url-do-repositorio>
+cd shopping-cart-api
+```
+
+2. Instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Crie um arquivo `.env` na raiz do projeto com a variável de conexão ao banco:
+
+```env
+DATABASE_URL=postgresql://usuario:senha@host/banco
+```
+
+---
+
+## Banco de dados
+
+Os comandos abaixo utilizam o `Makefile` para simplificar o uso do Alembic.
+
+### Gerar uma nova migration
+
+```bash
+make migrate msg="descrição da migration"
+```
+
+> O Alembic compara os models com o estado atual do banco e gera o arquivo de migration automaticamente.
+
+### Aplicar migrations pendentes
+
+```bash
+make upgrade
+```
+
+### Reverter a última migration
+
+```bash
+make downgrade
+```
+
+### Ver histórico de migrations
+
+```bash
+make history
+```
+
+---
+
+## Executando o servidor
+
+```bash
+make run
+```
+
+A API estará disponível em `http://localhost:8000`.
+
+Documentação interativa (Swagger): `http://localhost:8000/docs`
+
+---
+
+## Docker
+
+Quando a configuração Docker estiver disponível, a execução será via:
 
 ```bash
 docker compose up --build
 ```
-
-Enquanto a estrutura de containerização não estiver finalizada, essas são as orientações previstas para a execução da aplicação.
