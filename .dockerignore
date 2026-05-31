@@ -1,7 +1,15 @@
 .git
+.gitignore
 .venv
 .vscode
+.env
 __pycache__
 *.pyc
-.env
+*.pyo
+*.pyd
+*.egg-info
+.pytest_cache
+.ruff_cache
 docker-compose.yml
+Dockerfile
+README.md

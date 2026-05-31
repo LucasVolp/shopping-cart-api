@@ -59,6 +59,8 @@ def update_user(
     try:
         return use_case.update(user_id, dto)
     except ValueError as e:
+        if "Email already in use" in str(e):
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 

@@ -13,7 +13,7 @@ class Cart(Base):
     __tablename__ = "cart"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"), nullable=False, unique=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"), nullable=False)
     status = Column(Enum(CartStatus), nullable=False, default=CartStatus.ACTIVE)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
