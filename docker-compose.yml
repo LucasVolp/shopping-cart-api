@@ -1,4 +1,23 @@
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: shopping-cart-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shopping_cart
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - shopping_cart_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shopping_cart"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   backend:
     build:
       context: .
@@ -11,8 +30,14 @@ services:
     volumes:
       - .:/app:cached
       - /app/.venv
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - shopping_cart_network
 
 networks:
   shopping_cart_network:
+
+volumes:
+  postgres_data:
