@@ -20,6 +20,7 @@ class Product(Base):
     description = Column(String, nullable=False)
     price = Column(Float, nullable=False)
     quantity_available = Column(Integer, nullable=False)
+    image_url = Column(String, nullable=True)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 

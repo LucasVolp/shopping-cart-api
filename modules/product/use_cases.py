@@ -10,16 +10,28 @@ class ProductUseCases:
     def __init__(self, repository: ProductRepository):
         self.repository = repository
 
-    def get_all(self) -> DynamicArray[Product]:
-        """Fetch all products from the database and load them into a DynamicArray.
+    def get_all(
+        self,
+        sort_by: str | None = None,
+        order: str = "asc",
+        search: str | None = None,
+    ) -> DynamicArray[Product]:
+        """Fetch products, optionally filtered by name and sorted by name or price.
 
-        Each product is appended one by one, exercising the array's append
-        operation (O(1) amortized).  The caller receives a DynamicArray that
-        supports index access, iteration, and len().
-
-        Complexity: O(n) — one append per product.
+        Uses sorted() and list comprehensions (native Python) as permitted for this stage.
+        Complexity: O(n log n) when sorting, O(n) otherwise.
         """
-        products = self.repository.find_all()
+        products: list[Product] = list(self.repository.find_all())
+
+        if search:
+            search_lower = search.lower()
+            products = [p for p in products if search_lower in p.name.lower()]
+
+        if sort_by == "name":
+            products = sorted(products, key=lambda p: p.name.lower(), reverse=(order == "desc"))
+        elif sort_by == "price":
+            products = sorted(products, key=lambda p: p.price, reverse=(order == "desc"))
+
         array: DynamicArray[Product] = DynamicArray()
         for product in products:
             array.append(product)
@@ -46,6 +58,7 @@ class ProductUseCases:
             description=dto.description,
             price=dto.price,
             quantity_available=dto.quantity_available,
+            image_url=dto.image_url,
         )
         return self.repository.create(product)
 

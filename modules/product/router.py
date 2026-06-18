@@ -17,13 +17,20 @@ def get_use_case(db: Session = Depends(get_db)) -> ProductUseCases:
 
 
 @router.get("/", response_model=list[ProductDTO])
-def list_products(use_case: ProductUseCases = Depends(get_use_case)):
-    """List all products.
+def list_products(
+    sort_by: str | None = None,
+    order: str = "asc",
+    search: str | None = None,
+    use_case: ProductUseCases = Depends(get_use_case),
+):
+    """List all products with optional search and sort.
 
-    Internally the use case stores results in a DynamicArray before returning.
-    The router converts it to a plain list for JSON serialisation.
+    Query params:
+    - search: filter by name (case-insensitive substring)
+    - sort_by: 'name' or 'price'
+    - order: 'asc' (default) or 'desc'
     """
-    return list(use_case.get_all())
+    return list(use_case.get_all(sort_by=sort_by, order=order, search=search))
 
 
 @router.get("/{product_id}", response_model=ProductDTO)
