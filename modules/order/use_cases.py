@@ -4,6 +4,7 @@ from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from core.data_structures.array import DynamicArray
+from core.data_structures.linked_list import LinkedList
 from models import Cart, CartItem, Order, OrderItem, Payment, Product
 from models.enums.enums import CartStatus, OrderStatus, PaymentStatus
 from modules.cart.repository import CartRepository
@@ -17,16 +18,17 @@ class OrderUseCases:
         self.order_repo = order_repo
         self.cart_repo = cart_repo
 
-    def get_orders_by_user(self, user_id: UUID) -> DynamicArray[Order]:
-        """Return all orders for a user loaded into a DynamicArray.
+    def get_orders_by_user(self, user_id: UUID) -> LinkedList[Order]:
+        """Return all orders for a user loaded into a LinkedList.
 
+        Uses the LinkedList data structure to store the purchase history.
         Complexity: O(n) — one append per order.
         """
         orders = self.order_repo.find_by_user_id(user_id)
-        array: DynamicArray[Order] = DynamicArray()
+        history: LinkedList[Order] = LinkedList()
         for order in orders:
-            array.append(order)
-        return array
+            history.append(order)
+        return history
 
     def get_order_detail(self, order_id: UUID) -> Order:
         """Return a single order with its items and payment or raise ValueError if not found."""

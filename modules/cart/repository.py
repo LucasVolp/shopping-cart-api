@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from models import Cart, CartItem
 from models.enums.enums import CartStatus
+from models.product import Product
 
 
 class CartRepository:
@@ -23,6 +24,12 @@ class CartRepository:
         """Find a cart item by ID."""
         return self.session.scalars(
             select(CartItem).where(CartItem.id == item_id)
+        ).first()
+
+    def find_product_by_id(self, product_id: UUID) -> Product | None:
+        """Check if a product exists by ID."""
+        return self.session.scalars(
+            select(Product).where(Product.id == product_id)
         ).first()
 
     def find_item_by_cart_and_product(self, cart_id: UUID, product_id: UUID) -> CartItem | None:

@@ -29,7 +29,10 @@ def add_item(
     use_case: CartUseCases = Depends(get_use_case),
 ):
     """Add a product to the cart or increment its quantity if already present."""
-    return use_case.add_item(user_id, dto)
+    try:
+        return use_case.add_item(user_id, dto)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
 @router.patch("/{user_id}/items/{item_id}", response_model=CartDTO)
@@ -63,3 +66,12 @@ def remove_item(
 def clear_cart(user_id: UUID, use_case: CartUseCases = Depends(get_use_case)):
     """Remove all items from the user's active cart."""
     return use_case.clear_cart(user_id)
+
+
+@router.post("/{user_id}/undo", response_model=CartDTO)
+def undo_last_action(user_id: UUID, use_case: CartUseCases = Depends(get_use_case)):
+    """Undo the last cart action (add, update or remove) using the Stack data structure."""
+    try:
+        return use_case.undo_last_action(user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
