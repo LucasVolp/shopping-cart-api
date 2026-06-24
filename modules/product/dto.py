@@ -10,6 +10,7 @@ class CreateProductDTO(BaseModel):
     description: str
     price: float
     quantity_available: int
+    image_url: str | None = None
 
     @field_validator("price")
     @classmethod
@@ -33,6 +34,7 @@ class UpdateProductDTO(BaseModel):
     description: str | None = None
     price: float | None = None
     quantity_available: int | None = None
+    image_url: str | None = None
 
     @field_validator("price")
     @classmethod
@@ -64,6 +66,7 @@ class ProductDTO(BaseModel):
     description: str
     price: float
     quantity_available: int
+    image_url: str | None = None
     category: CategorySummaryDTO
     created_at: datetime
 

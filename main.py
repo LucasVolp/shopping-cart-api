@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from modules.cart.router import router as cart_router
 from modules.category.router import router as category_router
@@ -11,6 +12,13 @@ app = FastAPI(
     title="Shopping Cart API",
     description="API for managing a shopping cart",
     version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:3003", "http://localhost:3004"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(user_router, prefix="/users", tags=["Users"])
